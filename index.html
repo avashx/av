@@ -16,6 +16,9 @@
 <style>
 /*Custom Fonts*/
 
+html {
+  scroll-behavior: smooth;
+}
 
 
         @font-face {
@@ -289,6 +292,18 @@ width:58px;
     margin: 20px;
     z-index: 1000;
     position: relative;
+
+}
+
+.btn2{
+
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #12121270;
+    border: 2px solid #000000;
+    color: white;
+    border-radius: 4px;
 
 }
 
@@ -994,8 +1009,8 @@ body.dark-mode .color-picker-dropdown {
 
     <div id="upload-section">
         <input type="file" id="fileUpload" accept="image/*,application/pdf">
-        <button onclick="previewFile()">Preview</button>
-        <button onclick="extractCharacters()">Extract Characters</button>
+        <button class="btn2" onclick="previewFile()">Preview</button>
+        <button class="btn2" onclick="extractCharacters()">Extract Characters</button>
     </div>
 
     <div id="preview-container">
