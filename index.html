@@ -1030,7 +1030,7 @@ body.dark-mode .color-picker-dropdown {
         <br>
         <p>Step : 2</p><button class="btn2" onclick="previewFile()">Preview</button>
         <br> 
-        <p>Step : 3</p><button class="btn2" onclick="extractCharacters(); wshow();">Extract Characters</button>   
+        <p>Step : 3</p><button class="btn2" onclick="extractCharacters(); show();">Extract Characters</button>   
         <br><p id="wait" style="color: green;">Processing.... Wait few second</p>
     </div>
 
@@ -1417,8 +1417,9 @@ function addColumn() {
     // Function to extract individual characters
 
 
-    function wshow() {
+    function show() {
         document.getElementById('wait').hidden = true
+
 
       }
 
@@ -1427,7 +1428,6 @@ function addColumn() {
 
 
     function extractCharacters() {
-        document.getElementById('wait').hidden = false
 
         const fileInput = document.getElementById("fileUpload").files[0];
         if (!fileInput) {
