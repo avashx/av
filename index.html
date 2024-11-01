@@ -342,7 +342,7 @@ color: rgb(255, 255, 255);
   width: 450px;
   max-width: 100%;
   padding: 25px;
-  border: 1px dashed rgba(255, 255, 255, 0.4);
+  border: 1px dashed rgba(0, 0, 0, 0.7);
   border-radius: 3px;
   transition: 0.2s;
 }
@@ -1028,11 +1028,11 @@ body.dark-mode .color-picker-dropdown {
    <center> <h1>Handwriting Character Extracter </h1><br><br>
 
     <div id="upload-section">
-        <p>Step : 1</p><br><div class="upload"><input type="file" id="fileUpload" accept="image/*,application/pdf"></div><br>
+        <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 1</p><br><div class="upload"><input type="file" id="fileUpload" accept="image/*,application/pdf"></div>
         <br>
-        <p>Step : 2</p><button class="btn2" onclick="previewFile()">Preview</button>
+        <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 2</p><button class="btn2" onclick="previewFile()">Preview</button>
         <br> 
-        <p>Step : 3</p><button class="btn2" onclick="extractCharacters(); wshow();">Extract Characters</button>   
+        <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 3</p><button class="btn2" onclick="extractCharacters(); wshow();">Extract Characters</button>   
         <br><p id="wait" style="color: green;">Processing.... Wait few second</p>
     </div>
 
@@ -1488,7 +1488,7 @@ function addColumn() {
                     characterBox.appendChild(charImage);
     
                     const label = document.createElement("span");
-                    label.textContent = `Character: ${text}`;
+                    label.textContent = `${text}`;
                     characterBox.appendChild(label);
     
                     characterContainer.appendChild(characterBox);
