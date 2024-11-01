@@ -273,6 +273,23 @@ width:58px;
 
 /*Image Processing area*/
 
+.imgpro{
+
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px;
+    display: flex;
+  
+    transition: background-color 0.3s, border-color 0.3s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin: 20px;
+    z-index: 1000;
+    
+
+}
 
  #character-extraction {
     margin-top: 20px;
@@ -970,7 +987,7 @@ body.dark-mode .color-picker-dropdown {
 
 <!---Handwriting upload area -->
 	
-<div class="toolbar">
+<div class="imgpro">
 
    <center> <h1>Handwriting Character Extracter </h1><br><br></center>
 
