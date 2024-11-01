@@ -1030,17 +1030,17 @@ body.dark-mode .color-picker-dropdown {
     <div id="upload-section">
         <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 1</p><br><div class="upload"><input type="file" id="fileUpload" accept="image/*,application/pdf"></div>
         <br>
-        <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 2</p><button class="btn2" onclick="previewFile()">Preview</button>
+        <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 2</p><button class="btn2" onclick="previewFile()">Preview</button>  <div id="preview-container">
+            <h2>File Preview:</h2>
+            <img id="imagePreview" style="display: none;" alt="Image Preview">
+            <canvas id="pdfPreview" style="display: none;"></canvas>
+        </div>
         <br> 
         <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 3</p><button class="btn2" onclick="extractCharacters(); wshow();">Extract Characters</button>   
         <br><p id="wait" style="color: green;">Processing.... Wait few second</p>
     </div>
 
-    <div id="preview-container">
-        <h2>File Preview:</h2>
-        <img id="imagePreview" style="display: none;" alt="Image Preview">
-        <canvas id="pdfPreview" style="display: none;"></canvas>
-    </div>
+  
 
     <div id="character-extraction">
         <h2>Extracted Characters:</h2>
