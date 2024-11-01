@@ -1418,9 +1418,9 @@ function addColumn() {
 
 
     function wshow() {
-
-        $('#wait').show();
-
+        const msg = document.querySelector("#wait")
+        msg.style.display = "block";
+        setTimeout(()=>{msg.style.display="none"},5000);
 
       }
 
@@ -1445,7 +1445,6 @@ function addColumn() {
         } else if (fileInput.type === "application/pdf") {
             const canvas = document.getElementById("pdfPreview");
             const imageURL = canvas.toDataURL();
-            $('#wait').hide();
             processImageForCharacters(imageURL);
         }
     }
