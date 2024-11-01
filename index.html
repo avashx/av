@@ -337,6 +337,16 @@ color: rgb(255, 255, 255);
     max-height: 300px;
 }
 
+.upload {
+    align-items: center;
+  width: 450px;
+  max-width: 100%;
+  padding: 25px;
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 3px;
+  transition: 0.2s;
+}
+
 .character-box {
     display: inline-block;
     border: 1px solid #eaeaea;
@@ -1016,7 +1026,7 @@ body.dark-mode .color-picker-dropdown {
    <center> <h1>Handwriting Character Extracter </h1><br><br>
 
     <div id="upload-section">
-        <p>Step : 1</p><br><input type="file" id="fileUpload" accept="image/*,application/pdf"><br>
+        <p>Step : 1</p><br><div class="upload"><input type="file" id="fileUpload" accept="image/*,application/pdf"></div><br>
         <br>
         <p>Step : 2</p><button class="btn2" onclick="previewFile()">Preview</button>
         <br> 
