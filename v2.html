@@ -71,6 +71,7 @@
             --show-splat: none;
             --show-smudge: none;
             --texture-opacity: 0.8;
+            --ink-rgb: 22, 3, 92; /* For ink effects */
         }
 
         [contentEditable=true]:empty:not(:focus):before {
@@ -944,7 +945,7 @@
         </div>
         <div class="toolbar-group">
             <button class="icon-btn" onclick="setBulletStyle('disc')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
-            <button class="icon-btn" onclick="setkeyboard_arrow_up setNumberStyle('decimal')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+            <button class="icon-btn" onclick="setNumberStyle('decimal')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
             <div class="dropdown">
                 <select class="font-dropdown" id="stamp">
                     <option selected="" disabled="">Branding</option>
@@ -1090,7 +1091,7 @@
         (function() {
             function setBulletStyle(style) {
                 document.execCommand('insertUnorderedList');
-                const editor = document.getElementById('editor');
+                const editor = document.getElementById('sampleeditor');
                 if (editor) {
                     const lists = editor.getElementsByTagName('ul');
                     for (const list of lists) {
@@ -1101,7 +1102,7 @@
 
             function setNumberStyle(style) {
                 document.execCommand('insertOrderedList');
-                const editor = document.getElementById('editor');
+                const editor = document.getElementById('sampleeditor');
                 if (editor) {
                     const lists = editor.getElementsByTagName('ol');
                     for (const list of lists) {
@@ -1157,18 +1158,63 @@
             }
 
             function applyHandwritingVariations() {
-                const editor = document.querySelector('.editor');
-                const text = editor.innerHTML;
-                const characters = text.split('');
-                editor.innerHTML = characters
-                    .map(char => {
-                        if (char.trim() === '') return char;
-                        const rotation = (Math.random() - 0.5) * 1;
-                        const offset = (Math.random() - 0.5) * 1;
-                        const size = (Math.random() - 0.5) * 0.5;
-                        return `<span style="--random-rotation: ${rotation}; --random-offset: ${offset}; --random-size: ${size}">${char}</span>`;
-                    })
-                    .join('');
+                const editor = document.getElementById('sampleeditor');
+                const selection = window.getSelection();
+                let range, cursorPosition;
+
+                // Save the current cursor position
+                if (selection.rangeCount > 0) {
+                    range = selection.getRangeAt(0);
+                    cursorPosition = range.cloneRange();
+                }
+
+                // Get the text content of the editor
+                const textNodes = getTextNodes(editor);
+                textNodes.forEach(node => {
+                    const text = node.textContent;
+                    if (text.trim() === '') return;
+
+                    // Create a document fragment to hold new spans
+                    const fragment = document.createDocumentFragment();
+                    text.split('').forEach(char => {
+                        if (char.trim() === '') {
+                            fragment.appendChild(document.createTextNode(char));
+                        } else {
+                            const span = document.createElement('span');
+                            const rotation = (Math.random() - 0.5) * 1;
+                            const offset = (Math.random() - 0.5) * 1;
+                            const size = (Math.random() - 0.5) * 0.5;
+                            span.style.setProperty('--random-rotation', rotation);
+                            span.style.setProperty('--random-offset', offset);
+                            span.style.setProperty('--random-size', size);
+                            span.textContent = char;
+                            fragment.appendChild(span);
+                        }
+                    });
+
+                    // Replace the text node with the styled spans
+                    node.parentNode.replaceChild(fragment, node);
+                });
+
+                // Restore the cursor position
+                if (range && cursorPosition) {
+                    selection.removeAllRanges();
+                    selection.addRange(cursorPosition);
+                }
+            }
+
+            // Helper function to get all text nodes in an element
+            function getTextNodes(element) {
+                const textNodes = [];
+                function walk(node) {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        textNodes.push(node);
+                    } else {
+                        node.childNodes.forEach(walk);
+                    }
+                }
+                walk(element);
+                return textNodes;
             }
 
             function randomizeLineSpacing() {
