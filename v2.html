@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Text to Hand</title>
+    <style>
+        /* Digital Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300&display=swap');
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+        @import url('https://fonts.googleapis.com/css?family=Handlee');
+        @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lobster&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.0.0/docx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="https://upload.wikimedia.org/wikipedia/en/thumb/e/e9/Netaji_Subhas_University_of_Technology.svg/800px-Netaji_Subhas_University_of_Technology.svg.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        /* Custom Fonts */
+        @font-face {
+            font-family: abs;
+            src: url(/abs.ttf);
+        }
+        @font-face {
+            font-family: shiv;
+            src: url(/shiv.ttf);
+        }
+        @font-face {
+            font-family: my;
+            src: url(/avs.ttf);
+        }
+        @font-face {
+            font-family: ary;
+            src: url(/ary.ttf);
+        }
+        @font-face {
+            font-family: newavs;
+            src: url(/newavs.ttf);
+        }
+
+        /* General styles */
+        :root {
+            --bgbr: brightness(100%);
+            --backg: url('ppr.jpg');
+            --scnr: brightness(100%);
+            --shd: none;
+            --nbk: hidden;
+            --efft: -webkit-linear-gradient(215deg, rgba(0, 0, 0, 0.35)0%,rgba(255, 255, 255, 0.0) 80%);
+            --abtus: none;
+            --vib: none;
+            --fontfp: my;
+            --ver: 12px;
+            --ink: #16035c;
+            --fontsz: 22px;
+            --spac: 0px;
+            --lspac: 0px;
+            --rng: 10px;
+            --nprg: 0px;
+            --random-rotation: 0;
+            --random-offset: 0;
+            --random-size: 0;
+            --random-line-spacing: 0;
+            --random-margin: 0;
+            --show-splat: none;
+            --show-smudge: none;
+            --texture-opacity: 0.8;
+        }
+
+        [contentEditable=true]:empty:not(:focus):before {
+            content: attr(data-text)
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%);
+            color: #000;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+            background-size: 400% 400%;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1e1e1e 0%, #3e3e3e 100%);
+            color: #fff;
+        }
+
+        /* Menu bar styles */
+        .menu-bar {
+            display: flex;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            z-index: 1002;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        .menu-item {
+            position: relative;
+            padding: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        .menu-item:hover .dropdown-content {
+            display: block;
+        }
+
+        body.dark-mode .menu-bar {
+            background: rgba(30, 30, 30, 0.85);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1001;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px;
+        }
+
+        body.dark-mode .dropdown-content {
+            background-color: rgba(50, 50, 50, 0.85);
+        }
+
+        .dropdown-content button {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        #darkModeToggle {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        #darkModeToggle i {
+            color: inherit;
+        }
+
+        .rightbar {
+            position: absolute;
+            right: 60px;
+            top: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .rightbar span {
+            font-family: var(--fontfp);
+        }
+
+        .title {
+            font-family: var(--fontfp);
+        }
+
+        /* Toolbar styles */
+        .toolbar {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            transition: background-color 0.3s, border-color 0.3s;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            margin: 20px;
+            z-index: 1000;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            margin: 5px;
+        }
+
+        body.dark-mode .toolbar {
+            background: rgba(30, 30, 30, 0.25);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .toolbar button, .toolbar select, .toolbar input[type="color"], .toolbar input[type="range"] {
+            padding: 10px;
+            margin-right: 5px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        body.dark-mode .btn2 {
+            color: white;
+            border: 1px solid #ffffff;
+        }
+
+        .toolbar button:hover, .toolbar select:hover, .toolbar input[type="color"]:hover, .toolbar input[type="range"]:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-mode .toolbar button:hover, body.dark-mode .toolbar select:hover, body.dark-mode .toolbar input[type="color"]:hover, body.dark-mode .toolbar input[type="range"]:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="float"] {
+            width: 58px;
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            color: inherit;
+        }
+
+        .toolbar input[type="color"] {
+            background-color: var(--ink);
+            border-radius: 50%;
+            width: 25%;
+            height: 25%;
+            border: 2px;
+            box-shadow: 0 0 0 4px #fff;
+            color: rgba(255, 213, 128, .04);
+            overflow: hidden;
+        }
+
+        /* Image Processing area */
+        .imgpro {
+            background: rgba(255, 255, 255, 0.054);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            transition: background-color 0.3s, border-color 0.3s;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            margin: 20px;
+            z-index: 1000;
+        }
+
+        .imgpro h1 {
+            font-family: var(--fontfp);
+        }
+
+        .btn2 {
+            margin-top: 12px;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background-color: #12121200;
+            border: 1px solid #000000;
+            color: black;
+            border-radius: 8px;
+        }
+
+        .btn2:hover {
+            background-color: #000000;
+            border: 1px solid #000000;
+            color: rgb(239, 239, 239);
+        }
+
+        #character-extraction {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 90%;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        body.dark-mode #character-extraction {
+            background-color: #000000;
+            border: 1px solid #ddd;
+        }
+
+        #characterContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        #pdfPreview, #imagePreview {
+            max-height: 300px;
+        }
+
+        .upload {
+            align-items: center;
+            width: 450px;
+            max-width: 100%;
+            padding: 25px;
+            border: 1px dashed rgba(172, 166, 166, 0.546);
+            border-radius: 3px;
+            transition: 0.2s;
+        }
+
+        .character-box {
+            display: inline-block;
+            border: 1px solid #eaeaea;
+            padding: 5px;
+            text-align: center;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .character-box img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .character-box span {
+            display: block;
+            font-size: 14px;
+            color: #000;
+            background-color: #f7ffad40;
+            margin-top: 4px;
+        }
+
+        /* Main Canvas Paper */
+        .space {
+            word-spacing: var(--spac);
+            letter-spacing: var(--lspac);
+        }
+
+        .load {
+            margin-left: 50%;
+            margin-right: 50%;
+            height: 50px;
+        }
+
+        .paper {
+            position: relative;
+            width: 90%;
+            max-width: 770px;
+            min-width: 770px;
+            height: calc(11.7 * 770px / 8.3);
+            margin: 20px auto;
+            background: var(--backg);
+            background-size: cover;
+            background-position: center;
+            filter: var(--scnr) var(--bgbr) contrast(1.1) saturate(0.9);
+            border-radius: var(--rng);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0.02) 0%,
+                transparent 2%,
+                transparent 98%,
+                rgba(0, 0, 0, 0.02) 100%
+            ),
+            linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.02) 0%,
+                transparent 2%,
+                transparent 98%,
+                rgba(0, 0, 0, 0.02) 100%
+            );
+            pointer-events: none;
+        }
+
+        .paper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            opacity: 0.1;
+            pointer-events: none;
+            background: radial-gradient(
+                circle at top left,
+                rgba(255, 255, 255, 0.3) 0%,
+                transparent 50%
+            );
+            opacity: 0.5;
+        }
+
+        .paper:after {
+            display: none;
+            content: '';
+            pointer-events: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: var(--shd);
+            background: var(--efft);
+        }
+
+        .paper:before {
+            content: '';
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 75px;
+            background-size: 30px 30px;
+            border-right: 2.8px solid #DB7093;
+            box-sizing: border-box;
+            z-index: 250;
+        }
+
+        .paper-lup {
+            visibility: var(--nbk);
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 71px;
+            background-size: 30px 30px;
+            border-right: 1.8px solid #DB7093;
+            box-sizing: border-box;
+            z-index: 250;
+        }
+
+        .paper-up {
+            position: relative;
+            height: 40px;
+            background: linear-gradient(transparent, transparent 38px, #DB7093 38px);
+            background-size: 60px;
+        }
+
+        .paper-dup {
+            visibility: var(--nbk);
+            position: relative;
+            height: 40px;
+            top: 36px;
+            background: linear-gradient(transparent, transparent 38px, #DB7093 28px);
+            background-size: 60px;
+            z-index: 250;
+        }
+
+        .paper-content {
+            position: absolute;
+            top: 80px;
+            right: 0;
+            bottom: 30px;
+            left: 0px;
+            background: linear-gradient(transparent, transparent 28px, #91D1D3 1px);
+            background-size: 30px calc(30px + var(--random-line-spacing, 0px));
+        }
+
+        .paper-content div {
+            right: 0px;
+            bottom: 30px;
+            left: 0px;
+            line-height: 30px;
+            padding: 0 10px;
+            background: transparent;
+            color: var(--ink);
+            font-family: var(--fontfp);
+            font-size: var(--fontsz);
+            box-sizing: border-box;
+            z-index: 1;
+            position: relative;
+            text-shadow: 0 0 0.3px var(--ink), 0 0 0.6px rgba(var(--ink-rgb), 0.5);
+            filter: drop-shadow(0 0 0.5px var(--ink));
+        }
+
+        .paper-content div span {
+            display: inline-block;
+            transform: rotate(calc(-0.5deg + (1deg * var(--random-rotation))));
+            margin: 0 calc(0.5px * var(--random-offset));
+            font-size: calc(var(--fontsz) + var(--random-size));
+        }
+
+        .paper-content div span::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--ink);
+            border-radius: 50%;
+            opacity: 0.2;
+            transform: translate(calc(5px * var(--random-splat-x, 0)), calc(5px * var(--random-splat-y, 0)));
+            display: var(--show-splat, none);
+        }
+
+        .paper-content div::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, rgba(var(--ink-rgb), 0.1) 0%, transparent 70%);
+            opacity: 0.3;
+            transform: translate(calc(20px * var(--random-smudge-x, 0)), calc(20px * var(--random-smudge-y, 0)));
+            display: var(--show-smudge, none);
+        }
+
+        /* Stamp Logo */
+        .editor {
+            border: 0px inset grey;
+            height: 600px;
+            width: 690px;
+            margin: var(--ver);
+            margin-left: calc(78px + var(--random-margin, 0px));
+        }
+
+        .editormg {
+            border: 0px inset grey;
+            height: 40px;
+            width: 80px;
+            margin: -52px;
+            margin-left: 2px;
+        }
+
+        .stmp {
+            border: 0px inset grey;
+            height: 40px;
+            width: 95px;
+            margin: -40px;
+            margin-left: 79%;
+            margin-right: 0px;
+        }
+
+        .stmpimg {
+            height: 180%;
+            margin-top: -38%;
+        }
+
+        #editor-container {
+            flex: 1;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 40px;
+            min-height: 1100px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: background-color 0.3s, border-color 0.3s;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            margin: 20px;
+            z-index: 1;
+            overflow-x: hidden;
+        }
+
+        /* Phone View */
+        @media (max-width: 600px) {
+            .rightbar {
+                display: none;
+            }
+
+            .imgpro {
+                overflow: hidden;
+            }
+        }
+
+        /* Textarea Content */
+        textarea {
+            resize: none;
+            border: none;
+            background: transparent;
+            color: var(--ink);
+            font-family: var(--fontfp);
+            font-size: var(--fontsz);
+            width: 120px;
+            height: 38px;
+            line-height: 138%;
+        }
+
+        textarea:hover {
+            resize: both;
+            border: 1px solid;
+            border-radius: 4px;
+            background-color: rgba(189,167,167,0.2);
+        }
+
+        textarea::-webkit-scrollbar {
+            display: block;
+        }
+
+        /* Rows Colm hide show */
+        .vib {
+            display: var(--vib);
+        }
+
+        /* Pop up */
+        .overlay {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            transition: opacity 500ms;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .overlay:target {
+            visibility: visible;
+            opacity: 1;
+            z-index: 999;
+        }
+
+        .popup {
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+            width: 60%;
+            position: relative;
+            transition: all 2s ease-in-out;
+        }
+
+        .popup .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            transition: all 200ms;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 140px;
+            height: calc(11.7 * 160px / 8.3);
+            background-color: white;
+            align-items: center;
+            border: 1px solid #373F48;
+            border-radius: 12px;
+            margin: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            overflow: hidden;
+            color: #393838;
+            display: inline-block;
+            transition: .3s linear;
+            box-shadow: 5px 7px #888888;
+        }
+
+        .card h4, small {
+            margin-top: 20px;
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 50;
+            color: #393838;
+        }
+
+        .card h4 span {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .card:hover h4 {
+            color: white;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            transition: all 0.3s ease-in-out;
+            background: linear-gradient(135deg, #F13846, #F98D1B);
+            color: white;
+        }
+
+        .navpopup {
+            margin: 70px auto;
+            padding: 20px;
+            background: rgba(238, 244, 252, 0.91);
+            border-radius: 5px;
+            width: 60%;
+            position: relative;
+            transition: all 2s ease-in-out;
+        }
+
+        .navpopup li {
+            margin: 10px auto;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .navpopup .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            transition: all 200ms;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+        }
+
+        body.dark-mode #editor {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(30, 30, 30, 0.85);
+        }
+
+        body.dark-mode #editor-container {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(30, 30, 30, 0.85);
+        }
+
+        body.dark-mode .page-break {
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+        }
+
+        button.active {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+        }
+
+        .font-dropdown, .font-size-dropdown {
+            padding: 10px;
+            margin-right: 5px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: inherit;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+        }
+
+        body.dark-mode .font-dropdown, body.dark-mode .font-size-dropdown {
+            background-color: rgba(50, 50, 50, 0.85);
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .color-picker-dropdown {
+            display: none;
+            padding: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            background: rgba(200, 200, 200, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            position: absolute;
+            z-index: 1001;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        body.dark-mode .color-picker-dropdown {
+            background-color: rgba(50, 50, 50, 0.85);
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .color {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid;
+            border-color: inherit;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .color.no-highlight i {
+            color: inherit;
+            font-size: 18px;
+        }
+
+        #wait {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <div class="menu-item">File
+            <div class="dropdown-content">
+                <button id="saveBtn">Save</button>
+                <button onclick="window.location.href='#upload-section'">Upload</button>
+                <button onclick="printDoc()">Print</button>
+            </div>
+        </div>
+        <div class="menu-item">Edit
+            <div class="dropdown-content">
+                <button onclick="format('undo')">Undo</button>
+                <button onclick="format('redo')">Redo</button>
+                <button onclick="format('copy')">Copy</button>
+                <button onclick="format('cut')">Cut</button>
+                <button onclick="pasteText()">Paste</button>
+            </div>
+        </div>
+        <div class="menu-item">Table
+            <div class="dropdown-content">
+                <button class="fas fa-table" id="tbl">                Add Table</button><br>
+                <button class="fas fa-th vib" id="rw">                Add Row +</button>
+                <button class="fas fa-columns vib" id="col">         Add Column +</button>
+            </div>
+        </div>
+        <div class="menu-item">Paper
+            <div class="dropdown-content">
+                <div>
+                    <input type="radio" id="bg-1" value="url('texture.jpg')" name="backg">
+                    <label for="bg-1">Texture</label><br>
+                    <input type="radio" id="bg-2" value="#FFFFFF" name="backg" checked>
+                    <label for="bg-2">White</label><br>
+                    <input type="radio" id="bg-4" value="url('ppr.jpg')" name="backg">
+                    <label for="bg-4">Real</label><br>
+                    <input type="radio" id="bg-5" value="url('ppr3.jpg')" name="backg">
+                    <label for="bg-5">Paper 1</label><br>
+                    <input type="radio" id="bg-6" value="url('ppr4.jpg')" name="backg">
+                    <label for="bg-6">Paper 2</label><br>
+                    <input type="radio" id="bg-7" value="url('ppr5.jpg')" name="backg">
+                    <label for="bg-7">Paper 3</label><br>
+                    <input type="radio" id="bg-8" value="url('ppr6.jpg')" name="backg">
+                    <label for="bg-8">Paper 4</label><br>
+                    <input type="radio" id="bg-9" value="url('creased-paper.jpg')" name="backg">
+                    <label for="bg-9">Creased Paper</label><br>
+                    <input type="radio" id="bg-10" value="url('stained-paper.jpg')" name="backg">
+                    <label for="bg-10">Stained Paper</label><br>
+                    <input type="radio" id="bg-3" value="0" name="backg">
+                    <label for="bg-3">None</label><br><br>
+                    <input type="range" id="bgbr" name="backgbr" min="50" max="150"> <i class="fas fa-sun"></i><br>
+                    <label for="backgbr"><center><small>(Light)</small></center></label><br>
+                    <input type="radio" id="opt-1" value="none" name="page" checked>
+                    <label for="opt-1">None</label><br>
+                    <input type="radio" id="opt-2" value="inline-block" name="page">
+                    <label for="opt-2">Shadow</label><br>
+                    <input type="radio" id="opt-3" value="brightness(0.7) contrast(2.5)" name="page">
+                    <label for="opt-3">Scanner</label><br>
+                </div>
+            </div>
+        </div>
+        <button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode" id="darkModeToggle"><i class="fas fa-moon" id="mode-icon"></i></button>
+        <center><div class="rightbar">TEXT to<span> HANDWRITING</span></div></center>
+    </div>
+
+    <!-- Loading part -->
+    <br><br>
+    <center>
+        <img src="load.gif" class="load" id="load" style="display:none" />
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e9/Netaji_Subhas_University_of_Technology.svg/800px-Netaji_Subhas_University_of_Technology.svg.png" height="65px">
+        <div id="action"></div>
+        <div class="title"><br>
+            <span>Project By</span> Aman Vashishth<br>
+            <a href="#upload-section"><button class="btn2" title="Upload a Handwriting">Upload a Handwriting</button></a>
+            <a href="https://avpro.netlify.app"><button class="btn2" title="Know about this Project">Know about this Project</button></a>
+        </div>
+    </center>
+
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <button id="boldBtn" class="icon-btn" onclick="format('bold')" title="Bold"><i class="fas fa-bold"></i></button>
+            <button id="italicBtn" class="icon-btn" onclick="format('italic')" title="Italic"><i class="fas fa-italic"></i></button>
+            <button id="underlineBtn" class="icon-btn" onclick="format('underline')" title="Underline"><i class="fas fa-underline"></i></button>
+            <button id="superscriptBtn" class="icon-btn" onclick="format('superscript')" title="Superscript"><i class="fas fa-superscript"></i></button>
+            <button id="subscriptBtn" class="icon-btn" onclick="format('subscript')" title="Subscript"><i class="fas fa-subscript"></i></button>
+            <button id="crossOutBtn" class="icon-btn" onclick="applyCrossOut()" title="Cross Out"><i class="fas fa-strikethrough"></i></button>
+        </div>
+        <div class="toolbar-group">
+            <div class="dropdown">
+                <select id="fonttype" class="font-dropdown">
+                    <option selected="" disabled="">Font</option>
+                    <option value="'my'">Oldhand</option>
+                    <option value="'newavs'">Vashand</option>
+                    <option value="'shiv'">Shivam</option>
+                    <option value="'ary'">Aryhand</option>
+                    <option value="'abs'">Abhand</option>
+                    <option value="handlee">Handlee</option>
+                    <option value="Indie Flower">Indie</option>
+                    <option value="Kalam">Hindi</option>
+                    <option value="Cedarville Cursive">Cursive</option>
+                </select>
+            </div>
+        </div>
+        <div class="toolbar-group">
+            <input class="font-size-dropdown" type="float" id="fonts" value="22px">
+            <button class="icon-btn"><i class="fas fa-text-height"></i></button>
+            <input class="font-size-dropdown" type="float" id="verp" value="12px">
+            <button class="icon-btn"><i class="fas fa-arrows-alt-h"></i></button>
+            <input class="font-size-dropdown" type="float" id="spc" value="1px">
+            <button class="icon-btn"><i class="fas fa-text-width"></i></button>
+            <input class="font-size-dropdown" type="float" id="lspc" value="0px">
+        </div>
+        <div class="toolbar-group">
+            <div class="color-picker-wrapper">
+                <input class="icon-btn" type="color" id="pen" value="#16035c">
+            </div>
+            <button id="blackColorBtn" class="icon-btn" onclick="format('ForeColor','#000000')" title="Black"><i class="fas fa-square"></i></button>
+        </div>
+        <div class="toolbar-group">
+            <button class="icon-btn" onclick="format('justifyLeft')" title="Align Left"><i class="fas fa-align-left"></i></button>
+            <button class="icon-btn" onclick="format('justifyCenter')" title="Align Center"><i class="fas fa-align-center"></i></button>
+            <button class="icon-btn" onclick="format('justifyRight')" title="Align Right"><i class="fas fa-align-right"></i></button>
+            <button class="icon-btn" onclick="format('justifyFull')" title="Justify"><i class="fas fa-align-justify"></i></button>
+        </div>
+        <div class="toolbar-group">
+            <button class="icon-btn" onclick="setBulletStyle('disc')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+            <button class="icon-btn" onclick="setkeyboard_arrow_up setNumberStyle('decimal')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+            <div class="dropdown">
+                <select class="font-dropdown" id="stamp">
+                    <option selected="" disabled="">Branding</option>
+                    <option value="">None</option>
+                    <option value="<img class='stmpimg' src='stmp.png'>">Classmate</option>
+                    <option value="<img class='stmpimg' src='stmp3.png'>">Delta</option>
+                    <option value="<img class='stmpimg' src='stmp2.png'>">Plane</option>
+                    <option value="<img class='stmpimg' src='stmp1.png'>">Tara</option>
+                    <option value="<img class='stmpimg' src='stmp4.png'>">Simple</option>
+                </select>
+            </div>
+        </div>
+        <div class="toolbar-group">
+            <button class="icon-btn" onclick="window.location.href='#pop'" title="Paper"><i class="fas fa-file-alt"></i></button>
+            <div class="dropdown">
+                <select id="rel">
+                    <option selected="" disabled="">Quality</option>
+                    <option value="1">Low</option>
+                    <option value="2">High</option>
+                    <option value="3">Very High</option>
+                    <option value="4">Best</option>
+                    <option value="5">Too big</option>
+                    <option value="6">Enough!!</option>
+                </select>
+            </div>
+            <button class="icon-btn" onclick="doCapture();" title="Capture"><i class="fas fa-camera"></i></button>
+            <button class="icon-btn" onclick="downloadit();" title="Download"><i class="fas fa-download"></i></button>
+            <button class="icon-btn"><i class="fas fa-print"></i></button>
+        </div>
+        <div class="toolbar-group">
+            <label for="realism">Realism:</label>
+            <input type="range" id="realism" min="0" max="100" value="50">
+        </div>
+        <div class="toolbar-group">
+            <select id="preset">
+                <option value="neat">Neat Handwriting</option>
+                <option value="messy">Messy Notes</option>
+                <option value="vintage">Vintage Letter</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="editor-container">
+        <section>
+            <div id="paper" class="paper">
+                <div class="paper-lup"></div>
+                <div class="paper-dup"></div>
+                <div class="paper-up"></div>
+                <div class="paper-content">
+                    <div id="stmppr" class="stmp"><img class='stmpimg' src='stmp.png'></div>
+                    <div class="editormg space" contenteditable="true" data-text=" 1"></div>
+                    <div class="editor space" contenteditable="true" data-text="Tap here to edit text" id="sampleeditor"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Handwriting upload area -->
+    <div class="imgpro">
+        <center>
+            <h1>Handwriting Character Extracter</h1><br><br>
+            <div id="upload-section">
+                <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 1</p><br>
+                <div class="upload"><input type="file" id="fileUpload" accept="image/*,application/pdf"></div>
+                <br>
+                <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 2</p>
+                <button class="btn2" onclick="previewFile()">Preview</button>
+                <div id="preview-container">
+                    <h2>File Preview:</h2>
+                    <img id="imagePreview" style="display: none;" alt="Image Preview">
+                    <canvas id="pdfPreview" style="display: none;"></canvas>
+                </div>
+                <br>
+                <p style="color: rgb(5, 7, 87); font-size: 12px;">Step : 3</p>
+                <button class="btn2" onclick="extractCharacters(); wshow();">Extract Characters</button>
+                <br><p id="wait" style="color: green;">Processing.... Wait few second</p>
+            </div>
+            <div id="character-extraction">
+                <h2>Extracted Characters:</h2>
+                <div id="characterContainer"></div>
+            </div>
+        </center>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
+    </div>
+
+    <!-- Capture Canva -->
+    <script>
+        function doCapture() {
+            $('#load').show();
+            var node = document.getElementById('paper');
+            domtoimage.toPng(node).then(function(dataUrl) {
+                $('#load').hide();
+                var img = new Image();
+                img.src = dataUrl;
+                let res = document.body.appendChild(img);
+                res.style.width = "50%";
+            }).catch(function(error) {
+                console.error('oops, something went wrong!', error);
+            });
+        }
+    </script>
+
+    <!-- Download Canva -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+        function downloadit() {
+            $('#load').show();
+            window.scrollTo(0, 0);
+            var node = document.getElementById('paper');
+            var scale = document.getElementById("rel").value;
+            domtoimage.toPng(node, {
+                width: node.clientWidth * scale,
+                height: node.clientHeight * scale,
+                style: {
+                    transform: 'scale(' + scale + ')',
+                    transformOrigin: 'top left'
+                }
+            }).then(function(dataUrl) {
+                var img = new Image();
+                img.src = dataUrl;
+                downloadURI(dataUrl, "Page.png")
+                $('#load').hide();
+            }).catch(function(error) {
+                console.error('oops, something went wrong!', error);
+            });
+        }
+
+        function downloadURI(uri, name) {
+            var link = document.createElement("a");
+            link.download = name;
+            link.href = uri;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            delete link;
+        }
+    </script>
+
+    <script>
+        (function() {
+            function setBulletStyle(style) {
+                document.execCommand('insertUnorderedList');
+                const editor = document.getElementById('editor');
+                if (editor) {
+                    const lists = editor.getElementsByTagName('ul');
+                    for (const list of lists) {
+                        list.style.listStyleType = style;
+                    }
+                }
+            }
+
+            function setNumberStyle(style) {
+                document.execCommand('insertOrderedList');
+                const editor = document.getElementById('editor');
+                if (editor) {
+                    const lists = editor.getElementsByTagName('ol');
+                    for (const list of lists) {
+                        list.style.listStyleType = style;
+                    }
+                }
+            }
+
+            function toggleDarkMode() {
+                document.body.classList.toggle('dark-mode');
+                const icon = document.getElementById('mode-icon');
+                if (icon) {
+                    if (document.body.classList.contains('dark-mode')) {
+                        icon.classList.remove('fa-moon');
+                        icon.classList.add('fa-sun');
+                    } else {
+                        icon.classList.remove('fa-sun');
+                        icon.classList.add('fa-moon');
+                    }
+                }
+            }
+
+            function pasteText() {
+                navigator.clipboard.readText().then(text => {
+                    document.execCommand('insertText', false, text);
+                }).catch(err => {
+                    console.error('Failed to read clipboard contents:', err);
+                });
+            }
+
+            function applyCrossOut() {
+                const selection = window.getSelection();
+                if (selection.rangeCount) {
+                    const range = selection.getRangeAt(0);
+                    const span = document.createElement('span');
+                    span.style.textDecoration = 'line-through';
+                    span.style.textDecorationStyle = 'wavy';
+                    span.style.textDecorationColor = 'var(--ink)';
+                    range.surroundContents(span);
+                }
+            }
+
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            function applyHandwritingVariations() {
+                const editor = document.querySelector('.editor');
+                const text = editor.innerHTML;
+                const characters = text.split('');
+                editor.innerHTML = characters
+                    .map(char => {
+                        if (char.trim() === '') return char;
+                        const rotation = (Math.random() - 0.5) * 1;
+                        const offset = (Math.random() - 0.5) * 1;
+                        const size = (Math.random() - 0.5) * 0.5;
+                        return `<span style="--random-rotation: ${rotation}; --random-offset: ${offset}; --random-size: ${size}">${char}</span>`;
+                    })
+                    .join('');
+            }
+
+            function randomizeLineSpacing() {
+                const variation = (Math.random() - 0.5) * 2;
+                document.documentElement.style.setProperty('--random-line-spacing', variation + 'px');
+            }
+
+            function randomizeMargins() {
+                const variation = (Math.random() - 0.5) * 5;
+                document.documentElement.style.setProperty('--random-margin', variation + 'px');
+            }
+
+            function addInkSplatters() {
+                const spans = document.querySelectorAll('.paper-content div span');
+                spans.forEach(span => {
+                    if (Math.random() < 0.1) {
+                        span.style.setProperty('--show-splat', 'block');
+                        span.style.setProperty('--random-splat-x', Math.random() - 0.5);
+                        span.style.setProperty('--random-splat-y', Math.random() - 0.5);
+                    }
+                });
+            }
+
+            function addSmudges() {
+                const div = document.querySelector('.paper-content div');
+                if (Math.random() < 0.05) {
+                    div.style.setProperty('--show-smudge', 'block');
+                    div.style.setProperty('--random-smudge-x', Math.random() - 0.5);
+                    div.style.setProperty('--random-smudge-y', Math.random() - 0.5);
+                }
+            }
+
+            function animateHandwriting() {
+                const spans = document.querySelectorAll('.paper-content div span');
+                anime({
+                    targets: spans,
+                    opacity: [0, 1],
+                    translateY: [-5, 0],
+                    easing: 'easeInOutQuad',
+                    duration: 300,
+                    delay: anime.stagger(50)
+                });
+            }
+
+            function applyRealisticEffects() {
+                applyHandwritingVariations();
+                randomizeLineSpacing();
+                randomizeMargins();
+                addInkSplatters();
+                addSmudges();
+                animateHandwriting();
+            }
+
+            const addChangeListener = (elementId, cssVar) => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.addEventListener('change', (e) => {
+                        document.documentElement.style.setProperty(cssVar, e.target.value);
+                    });
+                }
+            };
+
+            addChangeListener('pen', '--ink');
+            addChangeListener('verp', '--ver');
+            addChangeListener('fonts', '--fontsz');
+            addChangeListener('fonttype', '--fontfp');
+            addChangeListener('spc', '--spac');
+            addChangeListener('lspc', '--lspac');
+            addChangeListener('stamp', '--stmppr');
+            addChangeListener('opt-1', '--shd');
+            addChangeListener('opt-2', '--shd');
+            addChangeListener('opt-3', '--shd');
+            addChangeListener('opt-3', '--scnr');
+            addChangeListener('ot-1', '--nbk');
+            addChangeListener('ot-2', '--nbk');
+            addChangeListener('bg-1', '--backg');
+            addChangeListener('bg-2', '--backg');
+            addChangeListener('bg-3', '--backg');
+            addChangeListener('bg-4', '--backg');
+            addChangeListener('bg-5', '--backg');
+            addChangeListener('bg-6', '--backg');
+            addChangeListener('bg-7', '--backg');
+            addChangeListener('bg-8', '--backg');
+            addChangeListener('bg-9', '--backg');
+            addChangeListener('bg-10', '--backg');
+
+            let bgbr = document.getElementById('bgbr');
+            bgbr.addEventListener('change', (e) => {
+                let q = "brightness(" + e.target.value + "%)";
+                document.documentElement.style.setProperty('--bgbr', q);
+            });
+
+            let stp = document.getElementById('stamp');
+            stp.addEventListener('change', (e) => {
+                let stpr = document.getElementById('stmppr');
+                stpr.innerHTML = e.target.value;
+            });
+
+            document.getElementById('realism').addEventListener('input', (e) => {
+                const value = e.target.value / 100;
+                document.documentElement.style.setProperty('--random-rotation', value);
+                document.documentElement.style.setProperty('--random-offset', value);
+                document.documentElement.style.setProperty('--random-size', value * 0.5);
+                document.documentElement.style.setProperty('--texture-opacity', 0.5 + value * 0.5);
+            });
+
+            document.getElementById('preset').addEventListener('change', (e) => {
+                const preset = e.target.value;
+                if (preset === 'neat') {
+                    document.documentElement.style.setProperty('--backg', 'url("clean-paper.jpg")');
+                    document.documentElement.style.setProperty('--random-rotation', '0');
+                    document.documentElement.style.setProperty('--random-offset', '0');
+                    document.documentElement.style.setProperty('--show-splat', 'none');
+                    document.documentElement.style.setProperty('--show-smudge', 'none');
+                } else if (preset === 'messy') {
+                    document.documentElement.style.setProperty('--backg', 'url("creased-paper.jpg")');
+                    document.documentElement.style.setProperty('--random-rotation', '1');
+                    document.documentElement.style.setProperty('--random-offset', '2');
+                    document.documentElement.style.setProperty('--show-splat', 'block');
+                    document.documentElement.style.setProperty('--show-smudge', 'block');
+                } else if (preset === 'vintage') {
+                    document.documentElement.style.setProperty('--backg', 'url("stained-paper.jpg")');
+                    document.documentElement.style.setProperty('--random-rotation', '0.5');
+                    document.documentElement.style.setProperty('--random-offset', '1');
+                    document.documentElement.style.setProperty('--texture-opacity', '0.9');
+                    document.documentElement.style.setProperty('--show-splat', 'block');
+                }
+            });
+
+            var button = document.getElementById("tbl");
+            button.addEventListener("click", addtable);
+            function addtable() {
+                let vbl = "inline";
+                var node = document.getElementById('sampleeditor');
+                document.documentElement.style.setProperty('--vib', vbl);
+                var tabledata = "<div><table id='main'><thead><tr><th><textarea placeholder='Hi'></textarea></th></tr></thead><tbody><tr><td><textarea placeholder='Hi'></textarea></td></tr></tbody></table></div>";
+                node.innerHTML = tabledata;
+            }
+
+            var button = document.getElementById("rw");
+            button.addEventListener("click", addRow);
+            function addRow() {
+                var table = document.getElementById("main");
+                var action = document.getElementById("action");
+                if (table == null) {
+                    document.documentElement.style.setProperty('--vib', "none");
+                    action.innerHTML = "<b>Insert Table First</b>";
+                    return;
+                }
+                var rws = table.rows;
+                var cols = table.rows[0].cells.length;
+                var row = table.insertRow(rws.length);
+                var cell;
+                for (var i = 0; i < cols; i++) {
+                    cell = row.insertCell(i);
+                    cell.innerHTML = '<textarea placeholder="Hi"></textarea>';
+                }
+            }
+
+            var button = document.getElementById("col");
+            button.addEventListener("click", addColumn);
+            function addColumn() {
+                var table = document.getElementById("main");
+                var action = document.getElementById("action");
+                if (table == null) {
+                    document.documentElement.style.setProperty('--vib', "none");
+                    action.innerHTML = "<b>Insert Table First</b>";
+                    return;
+                }
+                var rws = table.rows;
+                var cell;
+                for (var i = 0; i < rws.length; i++) {
+                    cell = rws[i].insertCell(-1);
+                    cell.innerHTML = '<textarea placeholder="Hi"></textarea>';
+                }
+            }
+
+            function format(command, value) {
+                document.execCommand(command, false, value);
+            }
+
+            window.addEventListener('load', function() {
+                const sampleEditor = document.getElementById('sampleeditor');
+                if (sampleEditor) {
+                    sampleEditor.setAttribute('contenteditable', 'true');
+                    sampleEditor.addEventListener('input', debounce(applyRealisticEffects, 200));
+                }
+            });
+
+            window.setBulletStyle = setBulletStyle;
+            window.setNumberStyle = setNumberStyle;
+            window.toggleDarkMode = toggleDarkMode;
+            window.pasteText = pasteText;
+            window.applyCrossOut = applyCrossOut;
+            window.format = format;
+        })();
+    </script>
+
+    <script>
+        let glyphMap = {};
+
+        function previewFile() {
+            const fileInput = document.getElementById("fileUpload").files[0];
+            if (!fileInput) {
+                alert("Please upload a file.");
+                return;
+            }
+            const imagePreview = document.getElementById("imagePreview");
+            const pdfPreview = document.getElementById("pdfPreview");
+            if (fileInput.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = "block";
+                    pdfPreview.style.display = "none";
+                };
+                reader.readAsDataURL(fileInput);
+            } else if (fileInput.type === "application/pdf") {
+                imagePreview.style.display = "none";
+                pdfPreview.style.display = "block";
+                renderPDF(fileInput, pdfPreview);
+            } else {
+                alert("Unsupported file type. Please upload an image or PDF.");
+            }
+        }
+
+        function renderPDF(file, canvas) {
+            const fileReader = new FileReader();
+            fileReader.onload = function() {
+                const typedArray = new Uint8Array(this.result);
+                pdfjsLib.getDocument(typedArray).promise.then(pdf => {
+                    pdf.getPage(1).then(page => {
+                        const viewport = page.getViewport({ scale: 1.5 });
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        const renderContext = {
+                            canvasContext: canvas.getContext('2d'),
+                            viewport: viewport
+                        };
+                        page.render(renderContext);
+                    });
+                });
+            };
+            fileReader.readAsArrayBuffer(file);
+        }
+
+        function wshow() {
+            const msg = document.querySelector("#wait");
+            msg.style.display = "block";
+            setTimeout(() => { msg.style.display = "none"; }, 7000);
+        }
+
+        function extractCharacters() {
+            const fileInput = document.getElementById("fileUpload").files[0];
+            if (!fileInput) {
+                alert("Please upload a file.");
+                return;
+            }
+            if (fileInput.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    processImageForCharacters(e.target.result);
+                };
+                reader.readAsDataURL(fileInput);
+            } else if (fileInput.type === "application/pdf") {
+                const canvas = document.getElementById("pdfPreview");
+                const imageURL = canvas.toDataURL();
+                processImageForCharacters(imageURL);
+            }
+        }
+
+        function processImageForCharacters(imageSrc) {
+            const characterContainer = document.getElementById("characterContainer");
+            characterContainer.innerHTML = "";
+            glyphMap = {};
+            Tesseract.recognize(imageSrc, 'eng', {
+                tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+            })
+            .then(result => {
+                const characters = result.data.words;
+                characters.forEach(charData => {
+                    const { text, bbox } = charData;
+                    const x = bbox.x0;
+                    const y = bbox.y0;
+                    const width = bbox.x1 - bbox.x0;
+                    const height = bbox.y1 - bbox.y0;
+                    const img = new Image();
+                    img.src = imageSrc;
+                    img.onload = function() {
+                        const canvas = document.createElement("canvas");
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+                        if (!glyphMap[text]) glyphMap[text] = [];
+                        glyphMap[text].push(canvas.toDataURL());
+                        const characterBox = document.createElement("div");
+                        characterBox.classList.add("character-box");
+                        const charImage = document.createElement("img");
+                        charImage.src = canvas.toDataURL();
+                        characterBox.appendChild(charImage);
+                        const label = document.createElement("span");
+                        label.textContent = `${text}`;
+                        characterBox.appendChild(label);
+                        characterContainer.appendChild(characterBox);
+                    };
+                });
+                console.log('Glyph Map:', glyphMap);
+            })
+            .catch(error => {
+                console.error("Error extracting characters:", error);
+            });
+        }
+    </script>
+</body>
+</html>
